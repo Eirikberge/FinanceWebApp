@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceWebApp.Server", "FinanceWebApp.Server\FinanceWebApp.Server.csproj", "{DCAD9193-4BC7-4549-9DDB-79825E4FBADA}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "financewebapp.client", "financewebapp.client\financewebapp.client.esproj", "{E3282DEC-9173-4734-BCD2-4677345B4AEF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCAD9193-4BC7-4549-9DDB-79825E4FBADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCAD9193-4BC7-4549-9DDB-79825E4FBADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCAD9193-4BC7-4549-9DDB-79825E4FBADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCAD9193-4BC7-4549-9DDB-79825E4FBADA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3282DEC-9173-4734-BCD2-4677345B4AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3282DEC-9173-4734-BCD2-4677345B4AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3282DEC-9173-4734-BCD2-4677345B4AEF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E3282DEC-9173-4734-BCD2-4677345B4AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3282DEC-9173-4734-BCD2-4677345B4AEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3282DEC-9173-4734-BCD2-4677345B4AEF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3DC6766D-BA6B-4D2D-9C49-2AED94F31524}
+	EndGlobalSection
+EndGlobal
