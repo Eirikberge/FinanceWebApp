@@ -6,17 +6,28 @@ import Portfolio from "./pages/Portfolio";
 import Trading from "./pages/Trading";
 import MyPage from "./pages/MyPage";
 import Calendar from "./pages/Calendar";
+import QuarterlyReport from "./pages/QuarterlyReport";
+import { StockProvider } from "./contexts/StockProvider";
+
 const App: React.FC = (): JSX.Element => {
   return (
+
     <div className="full-page">
       <Router>
         <Navbar />
-        <Routes>
-          <Route path="/myportfolio" element={<Portfolio />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/trading" element={<Trading />} />
-          <Route path="/calendar" element={<Calendar />} />
-        </Routes>
+        <div className="page-info">
+          <StockProvider>
+            <Routes>
+              <Route path="/myportfolio" element={<Portfolio />} />
+              <Route path="/trading" element={<Trading />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/mypage" element={<MyPage />} />
+
+              <Route path="/quarterlyreport" element={<QuarterlyReport />} />
+
+            </Routes>
+          </StockProvider>
+        </div>
         <Footer />
       </Router>
     </div>

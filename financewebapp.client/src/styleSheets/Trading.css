@@ -1,0 +1,7 @@
+.table {
+    width: 1000px;
+}
+.searchBar {
+    display: flex;
+    margin: 2px;
+}

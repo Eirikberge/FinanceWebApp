@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using FinanceApp.Models.Dtos;
+using FinanceWebApp.Dtos;
 
-namespace FinanceApp.Api.Controllers
+namespace FinanceWebApp.Api.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

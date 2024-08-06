@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FinanceApp.Models.Dtos
+namespace FinanceWebApp.Dtos
 {
 	public class EarningsCalendarDto
 	{

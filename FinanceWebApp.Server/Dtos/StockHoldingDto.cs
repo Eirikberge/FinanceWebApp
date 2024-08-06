@@ -1,4 +1,4 @@
-﻿namespace FinanceApp.Models.Dtos
+﻿namespace FinanceWebApp.Dtos
 {
 	public class StockHoldingDto
 	{

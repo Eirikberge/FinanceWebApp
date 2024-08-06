@@ -10,8 +10,8 @@ body {
     flex-direction: column;
     min-height: 100vh
 }
-.selectedPageInfo {
-    margin: 1rem;
+.page-info {
+    margin: 10px;
     text-align: left;
     flex: 1;
 }

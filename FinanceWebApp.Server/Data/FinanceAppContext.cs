@@ -1,9 +1,9 @@
-﻿using FinanceApp.Api.Entities;
+﻿using FinanceWebApp.Api.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Linq;
 
-namespace FinanceApp.Api.Data
+namespace FinanceWebApp.Api.Data
 {
 	public class FinanceAppContext : DbContext
 	{

@@ -1,7 +1,7 @@
 import api from "./api";
 import { StockInfoDto } from "../dtos/StockInfoDto";
 
-export async function fetchStockName(): Promise<StockInfoDto[]> {
+export async function fetchStockInfo(): Promise<StockInfoDto[]> {
     try {
         const response = await api.get<StockInfoDto[]>("/CompanyInfo");
         return response.data;
@@ -10,4 +10,3 @@ export async function fetchStockName(): Promise<StockInfoDto[]> {
         throw error;
     }
 }
-

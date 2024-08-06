@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FinanceApp.Api.Entities
+namespace FinanceWebApp.Api.Entities
 {
 	public class Trade
 	{

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FinanceApp.Models.Dtos;
+using FinanceWebApp.Dtos;
 
-namespace FinanceApp.Api.Controllers
+namespace FinanceWebApp.Api.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

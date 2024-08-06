@@ -4,7 +4,7 @@ function Calendar() {
     return (
         <div>
             <CalendarComponent view="month" />
-            </div>
+        </div>
     );
 }
 

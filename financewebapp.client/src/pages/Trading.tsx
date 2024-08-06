@@ -1,20 +1,22 @@
-import { useState, useEffect } from "react";
-import { fetchStockHoldings } from "../services/StockHoldingService";
+import React, { useEffect, useState, FormEvent } from "react";
+import { useStockContext } from "../contexts/StockProvider";
 import { fetchStockPrice } from "../services/StockPriceService";
 import { addTrade } from "../services/TradeService";
 import { TradeDto } from "../dtos/TradeDto";
 import { Stock } from "../dtos/StockDto";
-import { fetchStockName } from "../services/StockCikAndNameService";
-import { StockInfoDto } from "../services/StockCikAndNameService";
+import Searchbar from "../components/Searchbar";
+import "../styleSheets/Trading.css"
+
 
 const Trading: React.FC = (): JSX.Element => {
-  const [searchbarInputStock, setSearchbarInputStock] = useState<string>("");
+  const { holdings, stockInfoList, refreshData } = useStockContext();
+  const [searchbarInput, setSearchbarInput] = useState<string>("");
   const [searchResult, setSearchResult] = useState<Stock | null>(null);
   const [isStockOwned, setIsStockOwned] = useState(false);
   const [tradeInput, setTradeInput] = useState<number | undefined>(undefined);
   const [tradeBar, setTradeBar] = useState<"buy" | "sell" | null>(null);
-  const [, setStockInfo] = useState<StockInfoDto[]>([]);
   const [stockName, setStockName] = useState<string>("");
+  const [errMsg, setErrMsg] = useState<string>("");
   const [trades, setTrades] = useState<TradeDto[]>([]);
   const [,] = useState<TradeDto>({
     userId: 0,
@@ -28,12 +30,18 @@ const Trading: React.FC = (): JSX.Element => {
     fetchData();
   }, [searchResult]);
 
+  useEffect(() => {
+    if (errMsg) {
+      const timerId = setTimeout(() => {
+        setErrMsg("");
+      }, 5000);
+      return () => clearTimeout(timerId);
+    }
+  }, [errMsg]);
+
   const fetchData = async () => {
     if (searchResult) {
       try {
-        const stockInfoList = await fetchStockName();
-        setStockInfo(stockInfoList);
-
         const foundStock = stockInfoList.find(stock => stock.ticker === searchResult.symbol);
         if (foundStock) {
           setStockName(foundStock.name);
@@ -52,41 +60,17 @@ const Trading: React.FC = (): JSX.Element => {
       if (stock && stock.symbol.toUpperCase().includes(value.toUpperCase())) {
         setSearchResult(stock);
       } else {
-        const stockInfoList = await fetchStockName();
-        setStockInfo(stockInfoList);
-
-        const foundStockName = stockInfoList.find(info => info.name === searchbarInputStock);
+        const foundStockName = stockInfoList.find(info => info.name === searchbarInput);
         if (foundStockName) {
-          setSearchbarInputStock(foundStockName.ticker);
+          setSearchbarInput(foundStockName.ticker);
         }
-
         setSearchResult(null);
         console.error("No matching stock found");
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      setErrMsg(`Error fetching data with symbol ${value}`);
     }
   };
-
-  const checkIfStockOwned = async (symbol: string) => {
-    try {
-      const holdings = await fetchStockHoldings();
-      return holdings.some(holding => holding.stockSymbol.toUpperCase() === symbol.toUpperCase());
-    } catch (error) {
-      console.error("Error fetching stock holdings:", error);
-      return false;
-    }
-  };
-
-  const searchButtonHandler = async (value: string) => {
-    await fetchStock(value);
-    const isOwned = await checkIfStockOwned(value);
-    setIsStockOwned(isOwned);
-  };
-
-  const buyOrSellForm = (action: "buy" | "sell") => {
-    setTradeBar(action);
-  }
 
   const tradeStock = async () => {
     if (tradeInput === undefined) {
@@ -107,26 +91,53 @@ const Trading: React.FC = (): JSX.Element => {
     try {
       await addTrade(newTrade);
       setTrades([...trades, newTrade]);
+      refreshData(); // oppdater data i StockProvider
     } catch (error) {
       console.error("Error adding trade:", error);
     }
-    setSearchbarInputStock("")
+    setSearchbarInput("")
     setTradeBar(null)
   };
 
+  const checkIfStockOwned = async (symbol: string) => {
+    try {
+      return holdings.some(holding => holding.stockSymbol.toUpperCase() === symbol.toUpperCase());
+    } catch (error) {
+      console.error("Error fetching stock holdings:", error);
+      return false;
+    }
+  };
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    await fetchStock(searchbarInput);
+    const isOwned = await checkIfStockOwned(searchbarInput);
+    setIsStockOwned(isOwned);
+    setSearchbarInput("")
+  };
+
+  const buyOrSellForm = (action: "buy" | "sell") => {
+    setTradeBar(action);
+  }
+
+  const handleSearchbarChange = (value: string) => {
+    setSearchbarInput(value);
+  };
+
+
   return (
-    <div className="input-wrapper">
-      <input
-        className="input"
-        placeholder="Søk..."
-        value={searchbarInputStock}
-        onChange={(e) => setSearchbarInputStock(e.target.value)}
-      />
-      <div>
-        <button onClick={() => searchButtonHandler(searchbarInputStock)}>Søk</button>
-      </div>
+    <div>
+      <h2>Trade</h2>
+
+      <form onSubmit={handleSubmit}>
+        <div className="searchBar">
+          <Searchbar query={searchbarInput} onSearch={handleSearchbarChange} />
+          <button type="submit">Søk</button>
+        </div>
+          {errMsg}
+      </form>
       {searchResult ? (
-        <table>
+        <table className="table">
           <thead>
             <tr>
               <th>Name</th>
@@ -153,13 +164,10 @@ const Trading: React.FC = (): JSX.Element => {
               <td>{searchResult.low}</td>
               <td>{searchResult.percentChange}</td>
               <td>{searchResult.change}</td>
-              <td>
-                <button onClick={() => buyOrSellForm('buy')}>Buy</button>
-              </td>
+              <td><button onClick={() => buyOrSellForm('buy')}>Buy</button></td>
+
               {isStockOwned && (
-                <td>
-                  <button onClick={() => buyOrSellForm('sell')}>Sell</button>
-                </td>
+                <td><button onClick={() => buyOrSellForm('sell')}>Sell</button></td>
               )}
             </tr>
           </tbody>

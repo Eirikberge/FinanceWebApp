@@ -1,8 +1,10 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using FinanceApp.Api.Entities;
-using FinanceApp.Models.Dtos;
+using FinanceWebApp.Api.Entities;
+using FinanceWebApp.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using FinanceWebApp.Server.Services;
+
 
 namespace FinanceApp.Controllers
 {
@@ -11,6 +13,7 @@ namespace FinanceApp.Controllers
 	public class GetStockPriceController : Controller
 	{
 		private readonly HttpClient _httpClient;
+		private static OutgoingRateLimiter _limiter = new OutgoingRateLimiter();
 
 		public GetStockPriceController(HttpClient httpClient)
 		{
@@ -18,36 +21,52 @@ namespace FinanceApp.Controllers
 		}
 
 		[HttpGet("api/getstockprice/{symbol}")]
-
 		public ActionResult<StockPriceCandleDto> GetStockPrice(string symbol)
 		{
 			var request = new HttpRequestMessage(HttpMethod.Get, $"https://finnhub.io/api/v1/quote?symbol={symbol}");
 			request.Headers.Add("X-Finnhub-Token", "co5tdu1r01qv77g7q8bgco5tdu1r01qv77g7q8c0");
-			var response = _httpClient.Send(request);
-			if (!response.IsSuccessStatusCode)
+
+			try
 			{
-				return StatusCode((int)response.StatusCode);
-			}
+				_limiter.WaitForFinnhubLimiter();
 
-			var deserialized = JsonSerializer.Deserialize<QuoteResponse>(response.Content.ReadAsStream());
-			if (deserialized == null)
+				var response = _httpClient.Send(request);
+
+				if (!response.IsSuccessStatusCode)
+				{
+					var errorMessage = $"Error fetching stock price. Status code: {response.StatusCode}";
+					return StatusCode((int)response.StatusCode, new { message = errorMessage });
+				}
+
+				var deserialized = JsonSerializer.Deserialize<QuoteResponse>(response.Content.ReadAsStream());
+
+				if (deserialized == null)
+				{
+					return NoContent();
+				}
+
+				var stockPrice = new StockPriceCandleDto
+				{
+					Symbol = symbol,
+					Current = deserialized.Current,
+					High = deserialized.High,
+					Low = deserialized.Low,
+					Previous = deserialized.Previous,
+					PercentChange = deserialized.PercentChange,
+					Change = deserialized.Change,
+					Open = deserialized.Open
+				};
+
+				return Ok(stockPrice);
+			}
+			catch (Exception ex)
 			{
-				return NoContent();
+				var errorMessage = $"An error occurred: {ex.Message}";
+				return StatusCode(500, new { message = errorMessage });
 			}
-
-			var stockPrice = new StockPriceCandleDto();
-			stockPrice.Symbol = symbol;
-			stockPrice.Current = deserialized.Current;
-			stockPrice.High = deserialized.High;
-			stockPrice.Low = deserialized.Low;
-			stockPrice.Previous = deserialized.Previous;
-			stockPrice.PercentChange = deserialized.PercentChange;
-			stockPrice.Change = deserialized.Change;
-			stockPrice.Open = deserialized.Open;
-
-			return stockPrice;
 		}
 	}
+
 	public class QuoteResponse
 	{
 		[JsonPropertyName("c")]

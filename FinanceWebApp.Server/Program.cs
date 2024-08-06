@@ -1,9 +1,10 @@
-using FinanceApp.Api.Data;
-using FinanceApp.Api.Repositories;
-using FinanceApp.Api.Repositories.Contracts;
+using FinanceWebApp.Api.Data;
+using FinanceWebApp.Api.Repositories;
+using FinanceWebApp.Api.Repositories.Contracts;
+using FinanceWebApp.Server.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceApp.Api
+namespace FinanceWebApp.Api
 {
 	public class Program
 	{
@@ -25,6 +26,8 @@ namespace FinanceApp.Api
 			builder.Services.AddScoped<IStockHoldingRepository, StockHoldingRepository>();
 
 			builder.Services.AddHttpClient();
+
+			builder.Services.AddSingleton<OutgoingRateLimiter>();
 
 			builder.Services.AddCors(options =>
 			{

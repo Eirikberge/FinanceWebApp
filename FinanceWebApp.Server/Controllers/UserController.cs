@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using FinanceApp.Api.Data;
-using FinanceApp.Api.Entities;
-using FinanceApp.Models.Dtos;
+using FinanceWebApp.Api.Data;
+using FinanceWebApp.Api.Entities;
+using FinanceWebApp.Dtos;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceApp.Controllers
+namespace FinanceWebApp.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

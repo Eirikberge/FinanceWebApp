@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace FinanceApp.Models.Dtos
+namespace FinanceWebApp.Dtos
 {
 	public class TradeDto
 	{

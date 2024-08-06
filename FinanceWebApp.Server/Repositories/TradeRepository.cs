@@ -1,10 +1,10 @@
-﻿using FinanceApp.Api.Data;
-using FinanceApp.Api.Entities;
-using FinanceApp.Api.Repositories.Contracts;
-using FinanceApp.Models.Dtos;
+﻿using FinanceWebApp.Api.Data;
+using FinanceWebApp.Api.Entities;
+using FinanceWebApp.Api.Repositories.Contracts;
+using FinanceWebApp.Dtos;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceApp.Api.Repositories
+namespace FinanceWebApp.Api.Repositories
 {
 	public class TradeRepository : ITradeRepository
 	{

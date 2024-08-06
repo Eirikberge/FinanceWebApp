@@ -1,9 +1,9 @@
-﻿using FinanceApp.Api.Data;
-using FinanceApp.Api.Entities;
-using FinanceApp.Api.Repositories.Contracts;
+﻿using FinanceWebApp.Api.Data;
+using FinanceWebApp.Api.Entities;
+using FinanceWebApp.Api.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FinanceApp.Api.Controllers
+namespace FinanceWebApp.Api.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
