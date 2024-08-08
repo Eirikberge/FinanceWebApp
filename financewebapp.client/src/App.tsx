@@ -8,6 +8,7 @@ import MyPage from "./pages/MyPage";
 import Calendar from "./pages/Calendar";
 import QuarterlyReport from "./pages/QuarterlyReport";
 import { StockProvider } from "./contexts/StockProvider";
+import RegisterLogin from "./pages/RegisterLogin";
 
 const App: React.FC = (): JSX.Element => {
   return (
@@ -18,6 +19,8 @@ const App: React.FC = (): JSX.Element => {
         <div className="page-info">
           <StockProvider>
             <Routes>
+              <Route path="/" element={<RegisterLogin />} />
+              
               <Route path="/myportfolio" element={<Portfolio />} />
               <Route path="/trading" element={<Trading />} />
               <Route path="/calendar" element={<Calendar />} />

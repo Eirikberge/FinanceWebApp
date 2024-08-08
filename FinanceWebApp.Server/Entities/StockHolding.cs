@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FinanceWebApp.Api.Entities
+namespace FinanceWebApp.Server.Entities
 {
 	public class StockHolding
 	{

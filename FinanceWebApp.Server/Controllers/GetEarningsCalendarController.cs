@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using FinanceWebApp.Dtos;
+using FinanceWebApp.Server.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceWebApp.Api.Controllers

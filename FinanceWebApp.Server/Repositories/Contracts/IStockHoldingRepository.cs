@@ -1,6 +1,6 @@
-﻿using FinanceWebApp.Api.Entities;
+﻿using FinanceWebApp.Server.Entities;
 
-namespace FinanceWebApp.Api.Repositories.Contracts
+namespace FinanceWebApp.Server.Repositories.Contracts
 {
 	public interface IStockHoldingRepository
 	{

@@ -1,6 +1,6 @@
-﻿using FinanceWebApp.Dtos;
+﻿using FinanceWebApp.Server.Dtos;
 
-namespace FinanceWebApp.Api.Entities
+namespace FinanceWebApp.Server.Entities
 {
 	public class User
 	{

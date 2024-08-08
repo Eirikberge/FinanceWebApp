@@ -1,9 +1,9 @@
-﻿using FinanceWebApp.Api.Data;
-using FinanceWebApp.Api.Entities;
-using FinanceWebApp.Api.Repositories.Contracts;
+﻿using FinanceWebApp.Server.Data;
+using FinanceWebApp.Server.Entities;
+using FinanceWebApp.Server.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceWebApp.Api.Repositories
+namespace FinanceWebApp.Server.Repositories
 {
     public class StockHoldingRepository : IStockHoldingRepository
     // Repositories tilhører databasen, mens service er til prosjektet.

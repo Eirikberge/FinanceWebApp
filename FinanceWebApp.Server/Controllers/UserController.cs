@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using FinanceWebApp.Api.Data;
-using FinanceWebApp.Api.Entities;
-using FinanceWebApp.Dtos;
+using FinanceWebApp.Server.Data;
+using FinanceWebApp.Server.Entities;
+using FinanceWebApp.Server.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceWebApp.Controllers
@@ -27,7 +27,7 @@ namespace FinanceWebApp.Controllers
 			return Ok(owners);
 		}
 
-		[HttpPost]
+		[HttpPost] // kun ha denne i auth?
 		public async Task<IActionResult> AddUser([FromBody] UserDto user) 
 		{
 			var newUser = new User()

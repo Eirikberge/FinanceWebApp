@@ -1,10 +1,11 @@
-using FinanceWebApp.Api.Data;
-using FinanceWebApp.Api.Repositories;
-using FinanceWebApp.Api.Repositories.Contracts;
+using FinanceWebApp.Server.Repositories;
+using FinanceWebApp.Server.Repositories.Contracts;
 using FinanceWebApp.Server.Services;
+using FinanceWebApp.Server.Data;
+
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceWebApp.Api
+namespace FinanceWebApp.Server
 {
 	public class Program
 	{

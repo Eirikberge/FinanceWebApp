@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using FinanceWebApp.Api.Entities;
-using FinanceWebApp.Dtos;
+using FinanceWebApp.Server.Entities;
+using FinanceWebApp.Server.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using FinanceWebApp.Server.Services;
 

@@ -1,4 +1,4 @@
-﻿namespace FinanceWebApp.Dtos;
+﻿namespace FinanceWebApp.Server.Dtos;
 
 public class StockPriceCandleDto
 {

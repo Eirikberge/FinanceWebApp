@@ -1,7 +1,7 @@
-﻿using FinanceWebApp.Api.Entities;
-using FinanceWebApp.Dtos;
+﻿using FinanceWebApp.Server.Entities;
+using FinanceWebApp.Server.Dtos;
 
-namespace FinanceWebApp.Api.Repositories.Contracts
+namespace FinanceWebApp.Server.Repositories.Contracts
 {
 	public interface ITradeRepository
 	{
