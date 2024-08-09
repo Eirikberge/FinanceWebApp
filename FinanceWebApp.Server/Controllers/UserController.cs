@@ -3,6 +3,7 @@ using FinanceWebApp.Server.Data;
 using FinanceWebApp.Server.Entities;
 using FinanceWebApp.Server.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Azure.Core;
 
 namespace FinanceWebApp.Controllers
 {
@@ -49,6 +50,27 @@ namespace FinanceWebApp.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
+
+		[HttpPost("check/{nameCheck}")]
+		public async Task<ActionResult<string>> UsernameCheck(string nameCheck)
+		{
+			if (string.IsNullOrWhiteSpace(nameCheck))
+			{
+				return BadRequest("Username cannot be empty.");
+			}
+
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == nameCheck);
+
+			if (user != null)
+			{
+				return Ok("Username is taken.");
+			}
+			else
+			{
+				return Ok("Username is available.");
+			}
+		}
+
 	}
 	//	{
 	//	"id": 2,

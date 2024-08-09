@@ -6,6 +6,7 @@ import { TradeDto } from "../dtos/TradeDto";
 import { Stock } from "../dtos/StockDto";
 import Searchbar from "../components/Searchbar";
 import "../styleSheets/Trading.css"
+import { getUserIdFromToken } from "../components/GetUserIdFromToken";
 
 
 const Trading: React.FC = (): JSX.Element => {
@@ -80,8 +81,15 @@ const Trading: React.FC = (): JSX.Element => {
 
     const i = tradeBar === "sell" ? -1 : 1;
 
+    // const userId = getUserIdFromToken();
+    // if (userId === null) {
+    //   console.error("User ID is not available.");
+    //   return;
+    // }
+
     const newTrade: TradeDto = {
       userId: 1,
+      // userId,
       stockSymbol: searchResult?.symbol || "",
       quantity: tradeInput * i,
       price: searchResult?.current || 0,
@@ -134,7 +142,7 @@ const Trading: React.FC = (): JSX.Element => {
           <Searchbar query={searchbarInput} onSearch={handleSearchbarChange} />
           <button type="submit">Søk</button>
         </div>
-          {errMsg}
+        {errMsg}
       </form>
       {searchResult ? (
         <table className="table">
