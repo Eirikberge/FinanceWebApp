@@ -1,10 +1,10 @@
 import api from "./api";
 import { StockHolding } from "../dtos/StockHoldingDto";
-import { getUserIdFromToken } from "../components/GetUserIdFromToken";
+import { useIdFromToken } from "../hooks/useIdFromToken";
 
 
 export async function fetchStockHoldings(): Promise<StockHolding[]> {
-    const userId = getUserIdFromToken();
+    const userId = useIdFromToken();
 
     try {
         // const response = await api.get<StockHolding[]>(`/StockHolding/${userId}`);

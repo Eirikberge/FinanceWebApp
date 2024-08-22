@@ -4,7 +4,7 @@ interface DecodedToken {
     userId: string;
 }
 
-export function getUserIdFromToken(): number | null {
+export function useIdFromToken(): number | null {
     const token = localStorage.getItem("token");
     if (token) {
         try {

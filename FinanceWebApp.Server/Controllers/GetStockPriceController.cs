@@ -4,6 +4,7 @@ using FinanceWebApp.Server.Entities;
 using FinanceWebApp.Server.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using FinanceWebApp.Server.Services;
+using Microsoft.Extensions.Configuration;
 
 
 namespace FinanceApp.Controllers
@@ -14,17 +15,20 @@ namespace FinanceApp.Controllers
 	{
 		private readonly HttpClient _httpClient;
 		private static OutgoingRateLimiter _limiter = new OutgoingRateLimiter();
+		private readonly IConfiguration _configuration;
 
-		public GetStockPriceController(HttpClient httpClient)
+		public GetStockPriceController(HttpClient httpClient, IConfiguration configuration)
 		{
 			_httpClient = httpClient;
+			_configuration = configuration;
 		}
 
 		[HttpGet("api/getstockprice/{symbol}")]
 		public ActionResult<StockPriceCandleDto> GetStockPrice(string symbol)
 		{
+			var apiKey = _configuration["Finnhub:ApiKey"];
 			var request = new HttpRequestMessage(HttpMethod.Get, $"https://finnhub.io/api/v1/quote?symbol={symbol}");
-			request.Headers.Add("X-Finnhub-Token", "co5tdu1r01qv77g7q8bgco5tdu1r01qv77g7q8c0");
+			request.Headers.Add("X-Finnhub-Token", apiKey);
 
 			try
 			{

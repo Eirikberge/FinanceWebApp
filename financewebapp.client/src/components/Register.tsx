@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AddUser } from "../services/RegisterService";
 import { RegisterDto } from "../dtos/RegisterDto";
+import InputField from "./InputField";
 
 import api from "../services/api";
 
@@ -12,8 +13,6 @@ const Register: React.FC = () => {
   const [actionText, setActionText] = useState("");
   const [actionText2, setActionText2] = useState("");
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean>(true);
-
-
 
 
   useEffect(() => {
@@ -82,6 +81,8 @@ const Register: React.FC = () => {
         console.log("feil")
       }
     }
+    setPasswordReg("");
+    setConfirmPasswordReg("");
   }
 
 
@@ -89,40 +90,34 @@ const Register: React.FC = () => {
     <div className="Register">
       <h1>Registrer</h1>
       <form onSubmit={addUser}>
-        <label htmlFor="registerInputReg">Brukernavn:</label>
-        <div>
-          <input
-            type="text"
-            placeholder="Brukernavn"
-            value={usernameReg}
-            onChange={(e) => {
-              setUsernameReg(e.target.value);
-            }}
-          />
-          <br />
+        <InputField
+          id="usernameReg"
+          label="Brukernavn:"
+          type="text"
+          placeholder="Brukernavn"
+          value={usernameReg}
+          onChange={(e) => setUsernameReg(e.target.value)}
+        />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={passwordReg}
-            onChange={(e) => {
-              setPasswordReg(e.target.value);
-            }}
-          />
-          <br />
+        <InputField
+          id="passwordReg"
+          label="Passord:"
+          type="password"
+          placeholder="Passord"
+          value={passwordReg}
+          onChange={(e) => setPasswordReg(e.target.value)}
+        />
 
-          <input
-            type="password"
-            placeholder="Repeat password"
-            value={confirmPasswordReg}
-            onChange={(e) => {
-              setConfirmPasswordReg(e.target.value);
-            }}
-          />
-          <br />
+        <InputField
+          id="confirmPasswordReg"
+          label="Bekreft passord:"
+          type="password"
+          placeholder="Repeat password"
+          value={confirmPasswordReg}
+          onChange={(e) => setConfirmPasswordReg(e.target.value)}
+        />
 
-          <button type="submit">Registrer</button>
-        </div>
+        <button type="submit">Registrer</button>
       </form>
       {actionText}
       {actionText2}

@@ -7,8 +7,10 @@ import Trading from "./pages/Trading";
 import MyPage from "./pages/MyPage";
 import Calendar from "./pages/Calendar";
 import QuarterlyReport from "./pages/QuarterlyReport";
-import { StockProvider } from "./contexts/StockProvider";
 import RegisterLogin from "./pages/RegisterLogin";
+import { StockProvider } from "./contexts/StockProvider";
+import { AuthProvider } from "./contexts/AuthProvider";
+import RequireAuth from "./components/RequireAuth";
 
 const App: React.FC = (): JSX.Element => {
   return (
@@ -17,19 +19,25 @@ const App: React.FC = (): JSX.Element => {
       <Router>
         <Navbar />
         <div className="page-info">
-          <StockProvider>
-            <Routes>
-              <Route path="/" element={<RegisterLogin />} />
-              
-              <Route path="/myportfolio" element={<Portfolio />} />
-              <Route path="/trading" element={<Trading />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/mypage" element={<MyPage />} />
+          <AuthProvider>
+            <StockProvider>
+              <Routes>
+                <Route path="/login" element={<RegisterLogin />} />
 
-              <Route path="/quarterlyreport" element={<QuarterlyReport />} />
+                <Route element={<RequireAuth />}>
+                
+                <Route path="/" element={<Portfolio />} />
+                <Route path="/myportfolio" element={<Portfolio />} />
+                <Route path="/trading" element={<Trading />} />
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/mypage" element={<MyPage />} />
 
-            </Routes>
-          </StockProvider>
+                <Route path="/quarterlyreport" element={<QuarterlyReport />} />
+                </Route>
+
+              </Routes>
+            </StockProvider>
+          </AuthProvider>
         </div>
         <Footer />
       </Router>

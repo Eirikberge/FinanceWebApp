@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { LoginUserDto } from "../dtos/LoginUserDto";
 import { LoginUserService } from "../services/LoginService";
+import useAuth from "../hooks/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
 
+    const { setAuth } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+
     const [usernameInput, setUsernameInput] = useState("");
     const [passwordInput, setPasswordInput] = useState("");
+    const [actionText, setActionText] = useState("");
+
 
     const LoginUser = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -13,10 +22,20 @@ const Login: React.FC = () => {
             name: usernameInput,
             password: passwordInput,
         };
+
         try {
-            LoginUserService(userLogin)
-        } catch (error) {
-            console.error("Error logging in user:", error);
+            const decodedToken  = await LoginUserService(userLogin);
+            if (decodedToken  != undefined) {
+                setAuth({ isAuthenticated: true });
+                navigate(from, { replace: true });
+            }
+        } catch (error: any) {
+            if (error.response && error.response.status === 400) {
+                setActionText("Ugyldig brukernavn eller passord.");
+
+            } else {
+                setActionText("Det oppstod en feil ved innlogging av bruker.");
+            }
         }
 
         resetInputs();
@@ -56,6 +75,8 @@ const Login: React.FC = () => {
                     <button type="submit">Logg inn</button>
                 </div>
             </form >
+            {actionText}
+
         </div >
     );
 };

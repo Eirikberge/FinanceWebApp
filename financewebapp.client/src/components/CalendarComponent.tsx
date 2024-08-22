@@ -1,11 +1,11 @@
-import { eachDayOfInterval, endOfMonth, format, getISOWeek, startOfMonth, startOfWeek, endOfWeek, isSameDay, parseISO, getDay, addMonths, subMonths } from 'date-fns';
-import { nb } from 'date-fns/locale'; // nb står for norsk bokmål
-import "../styleSheets/Calendar.css"
 import { useEffect, useState } from 'react';
-import { FetchCalendarInfo } from "../services/StockCalendarInfoService";
-import { StockCalendarInfoDto } from "../dtos/StockCalendarInfoDto";
-import { fetchStockHoldings } from "../services/StockHoldingService";
-import { StockHolding } from '../dtos/StockHoldingDto';
+import { FetchCalendarInfo } from '../services/StockCalendarInfoService';
+import { StockCalendarInfoDto } from '../dtos/StockCalendarInfoDto';
+import { eachDayOfInterval, endOfMonth, format, getISOWeek, startOfMonth, startOfWeek, endOfWeek, isSameDay, parseISO, getDay, addMonths, subMonths, isToday } from 'date-fns';
+import { nb } from 'date-fns/locale';
+import "../styleSheets/Calendar.css";
+import useStockHoldings from '../hooks/useStockHoldings';
+import useStockCalendarInfoList from '../hooks/useStockCalendarInfoList';
 
 const WEEKDAYS = ["Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"];
 
@@ -19,23 +19,20 @@ function CalendarComponent({ view }: CalendarProps) {
     const firstMondayOfWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
     const lastSundayOfWeek = endOfWeek(currentDate, { weekStartsOn: 1 });
     const daysInWeek = eachDayOfInterval({ start: firstMondayOfWeek, end: lastSundayOfWeek });
-    const [, setStockHoldings] = useState<StockHolding[]>([]);
     const [calendarInfoList, setCalendarInfoList] = useState<StockCalendarInfoDto[]>([]);
-    const [monthChange, setMonthCange] = useState(0)
+
+    const holdings = useStockHoldings();
+    const stockCalendarInfoList = useStockCalendarInfoList();
 
     useEffect(() => {
-        fetchData();
-    }, [currentDate, monthChange]);
+        fetchData()
+    }, [])
 
-    const fetchData = async () => {
-        try {
-            const holdings = await fetchStockHoldings();
-            setStockHoldings(holdings);
+    useEffect(() => {
+        if (holdings.length > 0) {
             fetchCalenderInformation(holdings);
-        } catch (error) {
-            console.error("Error fetching data:", error);
         }
-    };
+    }, [currentDate, holdings]);
 
     const capitalizeFirstLetter = (string: string): string => {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -58,12 +55,21 @@ function CalendarComponent({ view }: CalendarProps) {
         startingDayIndex -= 1;
     }
 
-    const fetchCalenderInformation = async (holdings: StockHolding[]) => {
-        const { from, to } = getFirstAndLastDayOfMonth();
-        try {
-            const list = await FetchCalendarInfo(from, to);
+    const fetchData = () => {
+        const filteredList = stockCalendarInfoList.filter(item =>
+            holdings.some(holding => holding.stockSymbol === item.symbol)
+        );
 
+        setCalendarInfoList(filteredList);
+    }
+
+    const fetchCalenderInformation = async (holdings: any[]) => {
+        // Denne må utbedres slik at den har alle data fra denne og neste/forrige måned
+        const format = (date: Date) => date.toISOString().split('T')[0]; // YYYY-MM-DD format
+        try {
+            const list = await FetchCalendarInfo(format(firstDayOfMonth), format(lastDayOfMonth));
             const filteredList = list.filter(item =>
+
                 holdings.some(holding => holding.stockSymbol === item.symbol)
             );
 
@@ -71,18 +77,6 @@ function CalendarComponent({ view }: CalendarProps) {
         } catch (error) {
             console.error("Error getting stock info:", error);
         }
-    };
-
-    const getFirstAndLastDayOfMonth = () => {
-        const now = new Date();
-        const firstDay = new Date(now.getFullYear(), now.getMonth() + monthChange, 1);
-        const lastDay = new Date(now.getFullYear(), now.getMonth() + monthChange + 1, 0);
-
-        const format = (date: Date) => date.toISOString().split('T')[0]; // YYYY-MM-DD format
-        return {
-            from: format(firstDay),
-            to: format(lastDay),
-        };
     };
 
     const header = () => {
@@ -96,13 +90,13 @@ function CalendarComponent({ view }: CalendarProps) {
     }
 
     const goToPreviousMonth = () => {
-        setCurrentDate(subMonths(currentDate, 1));
-        setMonthCange(monthChange - 1)
+        const newDate = subMonths(currentDate, 1);
+        setCurrentDate(newDate);
     };
 
     const goToNextMonth = () => {
-        setCurrentDate(addMonths(currentDate, 1));
-        setMonthCange(monthChange + 1)
+        const newDate = addMonths(currentDate, 1);
+        setCurrentDate(newDate);
     };
 
 
@@ -126,8 +120,10 @@ function CalendarComponent({ view }: CalendarProps) {
                             <div key={`empty-${index}`} className="calendar-day empty"></div>
                         ))}
                         {daysInMonth.map((day, index) => (
-                            <div key={index} className="calendar-day">
-                                <div className="date">{format(day, "d")}</div>
+                            <div
+                                key={index}
+                                className={`calendar-day ${isToday(day) ? "today" : ""}`}
+                            >                                <div className="date">{format(day, "d")}</div>
                                 <div className="calendarInfo">
                                     {calendarInfoList
                                         .filter(event => isSameDay(parseISO(event.date), day))
@@ -148,6 +144,7 @@ function CalendarComponent({ view }: CalendarProps) {
                     </div>
                 </div>
             )}
+
             {view === "week" && (
                 <div>
                     <div className='calendar-header'>
@@ -160,16 +157,21 @@ function CalendarComponent({ view }: CalendarProps) {
                             </div>
                         ))}
                         {daysInWeek.map((day, index) => (
-                            <div key={index} className="calendar-day">
-                                <div className="date">{format(day, "d")}</div>
+                            <div
+                                key={index}
+                                className={`calendar-day ${isToday(day) ? "today" : ""}`}
+                            >                                     <div className="date">{format(day, "d")}</div>
                                 <div className="calendarInfo">
                                     {calendarInfoList
                                         .filter(event => isSameDay(parseISO(event.date), day))
                                         .map((event, eventIndex) => (
                                             <div key={`${event.symbol}-${event.date}-${eventIndex}`}>
                                                 <div>
-                                                    {event.symbol} Q:{event.quarter}
-                                                </div>
+                                                    {event.symbol}
+                                                    <br />
+                                                    Q:{event.quarter}
+                                                    <br />
+                                                    <a href={`/quarterlyreport?symbol=${event.symbol}&date=${event.date}`}>Kvartalsrapport: tbc</a>                                                </div>
                                             </div>
                                         ))}
                                 </div>

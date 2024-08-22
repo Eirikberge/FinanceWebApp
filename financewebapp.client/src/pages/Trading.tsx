@@ -6,7 +6,7 @@ import { TradeDto } from "../dtos/TradeDto";
 import { Stock } from "../dtos/StockDto";
 import Searchbar from "../components/Searchbar";
 import "../styleSheets/Trading.css"
-import { getUserIdFromToken } from "../components/GetUserIdFromToken";
+import { getUserIdFromToken } from "../hooks/useIdFromToken";
 
 
 const Trading: React.FC = (): JSX.Element => {
