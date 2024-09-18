@@ -6,7 +6,7 @@ import { TradeDto } from "../dtos/TradeDto";
 import { Stock } from "../dtos/StockDto";
 import Searchbar from "../components/Searchbar";
 import "../styleSheets/Trading.css"
-import { getUserIdFromToken } from "../hooks/useIdFromToken";
+import { useIdFromToken } from "../hooks/useIdFromToken";
 
 
 const Trading: React.FC = (): JSX.Element => {
@@ -14,7 +14,7 @@ const Trading: React.FC = (): JSX.Element => {
   const [searchbarInput, setSearchbarInput] = useState<string>("");
   const [searchResult, setSearchResult] = useState<Stock | null>(null);
   const [isStockOwned, setIsStockOwned] = useState(false);
-  const [tradeInput, setTradeInput] = useState<number | undefined>(undefined);
+  const [tradeInput, setTradeInput] = useState<number | undefined>(0);
   const [tradeBar, setTradeBar] = useState<"buy" | "sell" | null>(null);
   const [stockName, setStockName] = useState<string>("");
   const [errMsg, setErrMsg] = useState<string>("");
@@ -81,15 +81,13 @@ const Trading: React.FC = (): JSX.Element => {
 
     const i = tradeBar === "sell" ? -1 : 1;
 
-    // const userId = getUserIdFromToken();
-    // if (userId === null) {
-    //   console.error("User ID is not available.");
-    //   return;
-    // }
+    const userId = useIdFromToken();
+    if (userId === null) {
+      return;
+    }
 
     const newTrade: TradeDto = {
-      userId: 1,
-      // userId,
+      userId: userId,
       stockSymbol: searchResult?.symbol || "",
       quantity: tradeInput * i,
       price: searchResult?.current || 0,

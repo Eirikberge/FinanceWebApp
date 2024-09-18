@@ -6,6 +6,7 @@ import { nb } from 'date-fns/locale';
 import "../styleSheets/Calendar.css";
 import useStockHoldings from '../hooks/useStockHoldings';
 import useStockCalendarInfoList from '../hooks/useStockCalendarInfoList';
+import { Link } from 'react-router-dom';
 
 const WEEKDAYS = ["Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"];
 
@@ -134,7 +135,7 @@ function CalendarComponent({ view }: CalendarProps) {
                                                     <br />
                                                     Q:{event.quarter}
                                                     <br />
-                                                    <a href={`/quarterlyreport?symbol=${event.symbol}&date=${event.date}`}>Kvartalsrapport: tbc</a>
+                                                    <Link to={`/quarterlyreport?symbol=${event.symbol}&date=${event.date}`}>Kvartalsrapport: tbc</Link>
                                                 </div>
                                             </div>
                                         ))}

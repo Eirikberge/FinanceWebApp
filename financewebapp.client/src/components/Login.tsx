@@ -3,6 +3,7 @@ import { LoginUserDto } from "../dtos/LoginUserDto";
 import { LoginUserService } from "../services/LoginService";
 import useAuth from "../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
+import InputField from "./InputField";
 
 const Login: React.FC = () => {
 
@@ -24,8 +25,8 @@ const Login: React.FC = () => {
         };
 
         try {
-            const decodedToken  = await LoginUserService(userLogin);
-            if (decodedToken  != undefined) {
+            const decodedToken = await LoginUserService(userLogin);
+            if (decodedToken != undefined) {
                 setAuth({ isAuthenticated: true });
                 navigate(from, { replace: true });
             }
@@ -50,34 +51,28 @@ const Login: React.FC = () => {
         <div className="Login">
             <h1>Logg inn</h1>
             <form onSubmit={LoginUser}>
-                <label htmlFor="registerInputReg">Brukernavn:</label>
-                <div>
-                    <input
-                        type="text"
-                        placeholder="Brukernavn"
-                        value={usernameInput}
-                        onChange={(e) => {
-                            setUsernameInput(e.target.value);
-                        }}
-                    />
-                    <br />
+                <InputField
+                    id="registerInput"
+                    label="Brukernavn:"
+                    type="text"
+                    placeholder="Brukernavn"
+                    value={usernameInput}
+                    onChange={(e) => setUsernameInput(e.target.value)}
+                />
 
-                    <input
-                        type="password"
-                        placeholder="Passord"
-                        value={passwordInput}
-                        onChange={(e) => {
-                            setPasswordInput(e.target.value);
-                        }}
-                    />
-                    <br />
-
-                    <button type="submit">Logg inn</button>
-                </div>
+                <InputField
+                    id="passwordInput"
+                    label="Passord:"
+                    type="password"
+                    placeholder="Passord"
+                    value={passwordInput}
+                    onChange={(e) => setPasswordInput(e.target.value)}
+                />
+                <button type="submit">Logg inn</button>
             </form >
             {actionText}
+        </div>
 
-        </div >
     );
 };
 
