@@ -2,8 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useStockContext } from "../contexts/StockProvider";
 import CalendarComponent from "../components/CalendarComponent";
 import Searchbar from "../components/Searchbar";
-import "../styleSheets/Portfolio.css"
-
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+} from "@mui/material";
 
 const Portfolio: React.FC = (): JSX.Element => {
   const { holdings, namesMap, priceMap, infoMap } = useStockContext();
@@ -62,56 +71,74 @@ const Portfolio: React.FC = (): JSX.Element => {
   }, 0);
 
   return (
-    <div>
-      <h2>Min portefølje</h2>
+    <Box sx={{ padding: 2 }}>
+      <Typography variant="h4" gutterBottom>
+        Min portefølje
+      </Typography>
       <Searchbar query={searchbarInput} onSearch={handleSearchbarChange} />
       {holdings.length > 0 ? (
         <>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-                <th>Buying Price</th>
-                <th>Current Price</th>
-                <th>Quantity</th>
-                <th>Beta</th>
-                <th>Gain</th>
-              </tr>
-            </thead>
-            <tbody>
-              {displayedStockHoldings.map((stock, index) => (
-                <tr key={stock.stockSymbol + '_' + index}>
-                  <td>{stock.stockSymbol}</td>
-                  <td>{namesMap[stock.stockSymbol] || 'Loading...'}</td>
-                  <td>{stock.price}</td>
-                  <td>{priceMap[stock.stockSymbol]|| 'Loading...'}</td>
-                  <td>{stock.quantity}</td>
-                  <td>{infoMap[stock.stockSymbol]?.beta.toFixed(3) || 'Loading...'}</td>
-                  <td>{((priceMap[stock.stockSymbol] - stock.price) * stock.quantity).toFixed(2)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Symbol</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Buying Price</TableCell>
+                  <TableCell>Current Price</TableCell>
+                  <TableCell>Quantity</TableCell>
+                  <TableCell>Beta</TableCell>
+                  <TableCell>Gain</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {displayedStockHoldings.map((stock, index) => (
+                  <TableRow key={stock.stockSymbol + '_' + index}>
+                    <TableCell>{stock.stockSymbol}</TableCell>
+                    <TableCell>{namesMap[stock.stockSymbol] || 'Loading...'}</TableCell>
+                    <TableCell>{stock.price}</TableCell>
+                    <TableCell>{priceMap[stock.stockSymbol] || 'Loading...'}</TableCell>
+                    <TableCell>{stock.quantity}</TableCell>
+                    <TableCell>{infoMap[stock.stockSymbol]?.beta.toFixed(3) || 'Loading...'}</TableCell>
+                    <TableCell>{((priceMap[stock.stockSymbol] - stock.price) * stock.quantity).toFixed(2)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <br />
-          <h3>Portfolio info: </h3>
-          <table className="">
-            <tbody>
-              <tr className="portfolioInfo">
-                <th>Total worth: {totalWorth.toFixed(2)}$</th>
-                <th>Total Gain: {totalGain.toFixed(2)}$</th>
-                <th>Estimated annual dividend: {totalDividend.toFixed(2)}$</th>
-                <th>Risk(beta): {totalBeta.toFixed(3)}</th>
-              </tr>
-            </tbody>
-          </table>
+          <Typography variant="h6" sx={{ marginTop: 3 }}>
+            Portfolio info:
+          </Typography>
+          <TableContainer component={Paper} sx={{ width: '500px' }}>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Total worth:</TableCell>
+                  <TableCell>{totalWorth.toFixed(2)}$</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Total Gain:</TableCell>
+                  <TableCell>{totalGain.toFixed(2)}$</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Estimated annual dividend:</TableCell>
+                  <TableCell>{totalDividend.toFixed(2)}$</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Risk (beta):</TableCell>
+                  <TableCell>{totalBeta.toFixed(3)}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
         </>
       ) : (
-        <p>Loading stock holdings...</p>
+        <Typography variant="body1">Loading stock holdings...</Typography>
       )}
       <br />
       <CalendarComponent view="week" />
-    </div>
+    </Box>
   );
 }
 

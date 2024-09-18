@@ -1,3 +1,4 @@
+import { Box, TextField } from "@mui/material";
 import React, { useRef, useEffect, ChangeEvent } from "react";
 
 interface SearchbarProps {
@@ -19,15 +20,16 @@ const Searchbar: React.FC<SearchbarProps> = ({ query, onSearch }) => {
   };
 
   return (
-    <div className="input-wrapper">
-      <input
-        ref={inputRef}
-        className="input"
-        placeholder="Søk..."
+    <Box sx={{ display: 'flex', mt: 2 }}>
+      <TextField
+        inputRef={inputRef}
+        label="Søk..."
+        variant="outlined"
         value={query}
         onChange={handleInputChange}
+        sx={{ width: '100%', maxWidth: 400 }}
       />
-    </div>
+    </Box>
   );
 };
 

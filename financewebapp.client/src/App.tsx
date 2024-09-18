@@ -11,6 +11,7 @@ import RegisterLogin from "./pages/RegisterLogin";
 import { StockProvider } from "./contexts/StockProvider";
 import { AuthProvider } from "./contexts/AuthProvider";
 import RequireAuth from "./components/RequireAuth";
+import NoPage from "./pages/NoPage";
 
 const App: React.FC = (): JSX.Element => {
   return (
@@ -33,6 +34,9 @@ const App: React.FC = (): JSX.Element => {
                 <Route path="/mypage" element={<MyPage />} />
 
                 <Route path="/quarterlyreport" element={<QuarterlyReport />} />
+
+                <Route path="*" element={<NoPage />} />
+
                 </Route>
 
               </Routes>

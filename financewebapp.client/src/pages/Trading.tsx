@@ -5,9 +5,20 @@ import { addTrade } from "../services/TradeService";
 import { TradeDto } from "../dtos/TradeDto";
 import { Stock } from "../dtos/StockDto";
 import Searchbar from "../components/Searchbar";
-import "../styleSheets/Trading.css"
 import { useIdFromToken } from "../hooks/useIdFromToken";
-
+import {
+  Box,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Button,
+  TextField,
+  Alert
+} from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
 
 const Trading: React.FC = (): JSX.Element => {
   const { holdings, stockInfoList, refreshData } = useStockContext();
@@ -19,13 +30,6 @@ const Trading: React.FC = (): JSX.Element => {
   const [stockName, setStockName] = useState<string>("");
   const [errMsg, setErrMsg] = useState<string>("");
   const [trades, setTrades] = useState<TradeDto[]>([]);
-  const [,] = useState<TradeDto>({
-    userId: 0,
-    stockSymbol: "",
-    quantity: 0,
-    price: 0,
-    tradeDate: new Date().toISOString(),
-  });
 
   useEffect(() => {
     fetchData();
@@ -130,78 +134,96 @@ const Trading: React.FC = (): JSX.Element => {
     setSearchbarInput(value);
   };
 
-
   return (
     <div>
       <h2>Trade</h2>
 
       <form onSubmit={handleSubmit}>
-        <div className="searchBar">
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Searchbar query={searchbarInput} onSearch={handleSearchbarChange} />
-          <button type="submit">Søk</button>
-        </div>
-        {errMsg}
+          <IconButton
+            type="submit"
+            edge="end"
+            sx={{
+              height: '56px',
+              padding: '10px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              marginTop: '16px',
+              width: '50px'
+            }}
+          >
+            <SearchIcon />
+          </IconButton>
+        </Box>
+        {errMsg && <Alert severity="error">{errMsg}</Alert>}
       </form>
       {searchResult ? (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Symbol</th>
-              <th>Current Price</th>
-              <th>Open Price</th>
-              <th>Previous Price</th>
-              <th>High</th>
-              <th>Low</th>
-              <th>Percent Change</th>
-              <th>Change</th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{stockName}</td>
-              <td>{searchResult.symbol}</td>
-              <td>{searchResult.current}</td>
-              <td>{searchResult.open}</td>
-              <td>{searchResult.previous}</td>
-              <td>{searchResult.high}</td>
-              <td>{searchResult.low}</td>
-              <td>{searchResult.percentChange}</td>
-              <td>{searchResult.change}</td>
-              <td><button onClick={() => buyOrSellForm('buy')}>Buy</button></td>
+        <Table sx={{ width: '1000px' }}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Symbol</TableCell>
+              <TableCell>Current Price</TableCell>
+              <TableCell>Open Price</TableCell>
+              <TableCell>Previous Price</TableCell>
+              <TableCell>High</TableCell>
+              <TableCell>Low</TableCell>
+              <TableCell>Percent Change</TableCell>
+              <TableCell>Change</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell>{stockName}</TableCell>
+              <TableCell>{searchResult.symbol}</TableCell>
+              <TableCell>{searchResult.current}</TableCell>
+              <TableCell>{searchResult.open}</TableCell>
+              <TableCell>{searchResult.previous}</TableCell>
+              <TableCell>{searchResult.high}</TableCell>
+              <TableCell>{searchResult.low}</TableCell>
+              <TableCell>{searchResult.percentChange}</TableCell>
+              <TableCell>{searchResult.change}</TableCell>
+              <TableCell><Button variant="contained" onClick={() => buyOrSellForm('buy')}>Buy</Button></TableCell>
 
               {isStockOwned && (
-                <td><button onClick={() => buyOrSellForm('sell')}>Sell</button></td>
+                <TableCell><Button variant="outlined" onClick={() => buyOrSellForm('sell')}>Sell</Button></TableCell>
               )}
-            </tr>
-          </tbody>
-        </table>
+            </TableRow>
+          </TableBody>
+        </Table>
       ) : (
         <p></p>
       )}
       {tradeBar === "buy" && (
-        <div>
-          <input
-            className="input"
-            placeholder="Skriv inn antall du vil kjøpe"
+        <Box sx={{ mt: 2, width: '300px' }}>
+          <TextField
+            label="Skriv inn antall du vil kjøpe"
+            variant="outlined"
             value={tradeInput}
             onChange={(e) => setTradeInput(Number(e.target.value))}
+            fullWidth
           />
-          <button onClick={() => tradeStock()}>Buy</button>
-        </div>
+          <Button variant="contained" color="primary" onClick={() => tradeStock()} sx={{ mt: 2 }}>
+            Buy
+          </Button>
+        </Box>
       )}
       {tradeBar === "sell" && (
-        <div>
-          <input
-            className="input"
-            placeholder="Skriv inn antall du vil selge"
+        <Box sx={{ mt: 2, width: '300px' }}>
+          <TextField
+            label="Skriv inn antall du vil selge"
+            variant="outlined"
             value={tradeInput}
             onChange={(e) => setTradeInput(Number(e.target.value))}
+            fullWidth
           />
-          <button onClick={() => tradeStock()}>Sell</button>
-        </div>
+          <Button variant="contained" color="secondary" onClick={() => tradeStock()} sx={{ mt: 2 }}>
+            Sell
+          </Button>
+        </Box>
       )}
     </div>
   );
