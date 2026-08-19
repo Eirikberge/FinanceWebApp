@@ -21,7 +21,7 @@ namespace FinanceWebApp.Server
 			builder.Services.AddSwaggerGen();
 
 			builder.Services.AddDbContext<FinanceAppContext>(options =>
-				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+			   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 			builder.Services.AddScoped<ITradeRepository, TradeRepository>();
 			builder.Services.AddScoped<IStockHoldingRepository, StockHoldingRepository>();
